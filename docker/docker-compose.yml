@@ -1,0 +1,40 @@
+services:
+  redis:
+    image: redis:7-alpine
+    network_mode: host
+    volumes:
+      - redis-data-ar:/data
+    command: redis-server --appendonly yes
+
+  livekit-server:
+    image: livekit/livekit-server:latest
+    command: --config /etc/livekit.yaml
+    volumes:
+      - ./livekit.yaml:/etc/livekit.yaml
+    network_mode: host
+    depends_on:
+      - redis
+
+  livekit-sip:
+    image: livekit/sip:latest
+    volumes:
+      - ./sip-config.yaml:/etc/sip-config.yaml
+    command: --config /etc/sip-config.yaml
+    network_mode: host
+    depends_on:
+      - livekit-server
+
+  agent:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    network_mode: host
+    depends_on:
+      - livekit-server
+      - livekit-sip
+    env_file:
+      - ../.env
+    restart: unless-stopped
+
+volumes:
+  redis-data-ar:

@@ -1,0 +1,13 @@
+port: 7880
+rtc:
+    udp_port: 7882
+    tcp_port: 7881
+    use_external_ip: false
+    enable_loopback_candidate: false
+    node_ip: 10.0.0.205
+keys:
+    APIdjhUUPtHPsqy: Cc0g5XMaHrpTc4OwSXaxDQv8fqai3Wd7NAMIohrI8wE
+logging:
+    level: info
+redis:
+    address: 127.0.0.1:6379
